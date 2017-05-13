@@ -1,9 +1,9 @@
 /*
 *  Filename: Decomp.cpp
 *
-*  Author: Connor Baker
+*  Author: Connor Baker, IllegalArgument
 *
-*  Version: 0.1c
+*  Version: 0.1d
 *
 *  Description: This program is meant to take as a command line argument a
 *  natural number greater than three and print the lower and upper bounds of
@@ -18,34 +18,22 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
 using namespace std;
 
 unsigned long iteration = 0;
-vector<string> list;
-
-int sum(int lower_bound, int upper_bound) {
-    int sum = lower_bound;
-    iteration++;
-    for (int i = lower_bound+1; i <= upper_bound; i++) {
-        sum += i;
-        iteration++;
-    }
-    return sum;
-}
-
 
 
 void decompose(int input) {
-    // For loop to send values to test for decompositions
-    for (int i = 1; i < input/3; i++) { // No sense in going over half the value for the sum
-        #pragma omp parallel for
-        for (int j = i+1; j < input/3+2; ++j) { // No sense in going over half the value for the sum
-            if (sum(i,j) == input) { // Pass the values to our method to calculate possible bounds
-                list.push_back("Lower bound: "+to_string(i)+"\tUpper bound: "
-                                +to_string(j)); // Print successful attempts
-            }
+    #pragma omp parallel for
+    for (int lower_bound = 1; lower_bound < input/3; lower_bound++) {
+        int sum = 0;
+        int upper_bound;
+        for (upper_bound = lower_bound; sum < input; upper_bound++) {
+            sum += upper_bound;
+            iteration++;
+        }
+        if (sum == input) {
+            printf("Decomposable as \\sum_{%d}^{%d}\n", lower_bound, upper_bound-1);
         }
     }
 }
@@ -64,12 +52,6 @@ int main(int argc, char *argv[]) {
 
     // Pass to method to decompose
     decompose(input);
-
-    // Order the vector
-    sort(list.begin(), list.end());
-
-    for (const auto s: list)
-        cout << s << endl;
 
     cout << "There were " << iteration << " iterations." << endl;
     // Exit gracefully
