@@ -1,20 +1,29 @@
 /*
-*  filename: Decomp.cpp
-*  author: Connor Baker
-*  version: 0.1b
-*  description: Take a number that is not a power of two and find the upper and
-*  lower bounds of a sum on the natural numbers that is equal to that number,
-*  compsoded of at least three terms (since any odd number can be decomposed
-*  into two terms adjacent to the half of the number, like with 9 into 4 and 5).
+*  Filename: Decomp.cpp
+*
+*  Author: Connor Baker
+*
+*  Version: 0.1c
+*
+*  Description: This program is meant to take as a command line argument a
+*  natural number greater than three and print the lower and upper bounds of
+*  the decomposition of the number. The decomposition of a number refers to a
+*  way of rewriting a number as the sum of consecutive natural numbers.
+*
+*
+*
 *  Example: input of 15 would return 1 and 5 (1+2+3+4+5=15) and 4 and 6
 *  (4+5+6=15).
 */
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
-int iteration = 0;
+unsigned long iteration = 0;
+vector<string> list;
 
 int sum(int lower_bound, int upper_bound) {
     int sum = lower_bound;
@@ -30,11 +39,12 @@ int sum(int lower_bound, int upper_bound) {
 
 void decompose(int input) {
     // For loop to send values to test for decompositions
-    #pragma omp parallel for
-    for (int i = 1; i < input/2; i++) { // No sense in going over half the value for the sum
-        for (int j = i+1; j < input/2+1; ++j) { // No sense in going over half the value for the sum
+    for (int i = 1; i < input/3; i++) { // No sense in going over half the value for the sum
+        #pragma omp parallel for
+        for (int j = i+1; j < input/3+2; ++j) { // No sense in going over half the value for the sum
             if (sum(i,j) == input) { // Pass the values to our method to calculate possible bounds
-                cout << "Lower bound: "<< i << "\t Upper bound: " << j << endl; // Print successful attempts
+                list.push_back("Lower bound: "+to_string(i)+"\tUpper bound: "
+                                +to_string(j)); // Print successful attempts
             }
         }
     }
@@ -54,6 +64,12 @@ int main(int argc, char *argv[]) {
 
     // Pass to method to decompose
     decompose(input);
+
+    // Order the vector
+    sort(list.begin(), list.end());
+
+    for (const auto s: list)
+        cout << s << endl;
 
     cout << "There were " << iteration << " iterations." << endl;
     // Exit gracefully
