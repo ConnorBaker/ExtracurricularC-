@@ -3,7 +3,7 @@
 *
 *  Author: Connor Baker, IllegalArgument
 *
-*  Version: 0.2a
+*  Version: 0.2b
 *
 *  Description: This program is meant to take as a command line argument a
 *  natural number greater than three and print the lower and upper bounds of
@@ -20,49 +20,53 @@
 #include <string>
 using namespace std;
 
-unsigned long iteration = 0;
+
 
 void decompose(unsigned int input) {
+    unsigned int upper_bound;
+    unsigned int sum;
     #pragma omp parallel for
     for (unsigned int lower_bound = 1; lower_bound < input/3; lower_bound++) {
-        unsigned int sum = 0;
-        unsigned int upper_bound;
+        sum = 0;
         for (upper_bound = lower_bound; sum < input; upper_bound++) {
             sum += upper_bound;
-            iteration++;
         }
         if (sum == input) {
-            printf("Decomposable as $\\sum_{%u}^{%u} k$\n", lower_bound, upper_bound-1);
+            printf("Decomposable as the sum on [%u,%u]\n", lower_bound, upper_bound-1);
         }
     }
 }
+
+
 
 void decompose(unsigned long input) {
+    unsigned long upper_bound;
+    unsigned long sum;
     #pragma omp parallel for
     for (unsigned long lower_bound = 1; lower_bound < input/3; lower_bound++) {
-        unsigned long sum = 0;
-        unsigned long upper_bound;
+        sum = 0;
         for (upper_bound = lower_bound; sum < input; upper_bound++) {
             sum += upper_bound;
-            iteration++;
         }
         if (sum == input) {
-            printf("Decomposable as $\\sum_{%lu}^{%lu} k$\n", lower_bound, upper_bound-1);
+            printf("Decomposable as the sum on [%lu,%lu]\n", lower_bound, upper_bound-1);
         }
     }
 }
 
+
+
 void decompose(unsigned long long input) {
+    unsigned long long upper_bound;
+    unsigned long long sum;
     #pragma omp parallel for
     for (unsigned long long lower_bound = 1; lower_bound < input/3; lower_bound++) {
-        unsigned long long sum = 0;
-        unsigned long long upper_bound;
+        sum = 0;
         for (upper_bound = lower_bound; sum < input; upper_bound++) {
             sum += upper_bound;
-            iteration++;
         }
         if (sum == input) {
-            printf("Decomposable as $\\sum_{%llu}^{%llu} k$\n", lower_bound, upper_bound-1);
+            printf("Decomposable as the sum on [%llu,%llu]\n", lower_bound, upper_bound-1);
         }
     }
 }
@@ -81,6 +85,7 @@ int main(int argc, char *argv[]) {
     unsigned int input_int;
     unsigned long input_long;
     unsigned long long input_long_long;
+
 
     // Use try-catch statements to make sure we assign the variable correctly
     // It's best to use this to avoid the performance penalty involved with larger types
@@ -109,7 +114,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    cout << "There were " << iteration << " iterations." << endl;
+
     // Exit gracefully
     return 0;
 }
