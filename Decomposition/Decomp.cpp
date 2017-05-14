@@ -3,7 +3,7 @@
 *
 *  Author: Connor Baker, IllegalArgument
 *
-*  Version: 0.2b
+*  Version: 0.2c
 *
 *  Description: This program is meant to take as a command line argument a
 *  natural number greater than three and print the lower and upper bounds of
@@ -17,6 +17,7 @@
 */
 
 #include <iostream>
+#include <climits>
 #include <string>
 using namespace std;
 
@@ -80,40 +81,25 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-
-    // Initialize our possible variables
-    unsigned int input_int;
-    unsigned long input_long;
-    unsigned long long input_long_long;
-
-
-    // Use try-catch statements to make sure we assign the variable correctly
-    // It's best to use this to avoid the performance penalty involved with larger types
+    // Try to store our input as an unsigned long long
     try {
-        // Grab input from the console, use stoi to convert the string to an integer
-        input_int = stoi(argv[1]);
-        cout << "Treating " << input_int << " as a uint" << endl;
-        decompose(input_int);
-    } catch (out_of_range& e) {
-        try {
-            input_long = stoul(argv[1]);
-            cout << "Treating " << input_long << " as a ulong" << endl;
+        unsigned long long input_long_long = stoull(argv[1]);
+        if (UINT_MAX > input_long_long) {
+            unsigned int input_int = stol(argv[1]);
+            decompose(input_int);
+        } else if (ULONG_MAX > input_long_long) {
+            unsigned long input_long = stoul(argv[1]);
             decompose(input_long);
-        } catch (out_of_range& e) {
-            try {
-                input_long_long = stoull(argv[1]);
-                cout << "Treating " << input_long_long << " as a ulonglong" << endl;
-                decompose(input_long_long);
-            } catch (out_of_range& e) {
-                cout << "Please enter a number smaller than 1.844674407E19" << endl;
-                return 0;
-            }
+        } else {
+            decompose(input_long_long);
         }
+    } catch (out_of_range& e) {
+        cout << "Please enter a number smaller than 1.844674407E19" << endl;
+        return 0;
     } catch (invalid_argument& e) {
         cout << "Please enter a number";
         return 0;
     }
-
 
     // Exit gracefully
     return 0;
