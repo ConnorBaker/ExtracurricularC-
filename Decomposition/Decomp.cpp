@@ -3,7 +3,7 @@
 *
 *  Author: Connor Baker, IllegalArgument
 *
-*  Version: 0.3a
+*  Version: 0.3b
 *
 *  Description: This program is meant to take as a command line argument a
 *  natural number greater than three and print the lower and upper bounds of
@@ -30,7 +30,7 @@ void decompose(unsigned int input) {
   #pragma omp parallel for
 	for (unsigned int length = 1, temp = input; length < length_max; temp -= length, length++) {
 		if (temp % length == 0) {
-			printf("Decomposable as the sum on [%u, %u]\n", temp / length, temp / temp + length - 1);
+			printf("Decomposable as the sum on [%u, %u]\n", temp / length, temp / length + length - 1);
 		}
 	}
 }
