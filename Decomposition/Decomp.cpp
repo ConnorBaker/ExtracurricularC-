@@ -3,7 +3,7 @@
 *
 *  Author: Connor Baker, IllegalArgument
 *
-*  Version: 0.2c
+*  Version: 0.2d
 *
 *  Description: This program is meant to take as a command line argument a
 *  natural number greater than three and print the lower and upper bounds of
@@ -18,58 +18,44 @@
 
 #include <iostream>
 #include <climits>
+#include <cmath>
 #include <string>
 using namespace std;
 
 
 
 void decompose(unsigned int input) {
-    unsigned int upper_bound;
-    unsigned int sum;
-    #pragma omp parallel for
-    for (unsigned int lower_bound = 1; lower_bound < input/3; lower_bound++) {
-        sum = 0;
-        for (upper_bound = lower_bound; sum < input; upper_bound++) {
-            sum += upper_bound;
-        }
-        if (sum == input) {
-            printf("Decomposable as the sum on [%u,%u]\n", lower_bound, upper_bound-1);
-        }
-    }
+  unsigned int length_max = (unsigned int) sqrt(2 * input);
+  #pragma omp parallel for
+	for (unsigned int length = 1; length < length_max; input -= length, length++) {
+		if (input % length == 0) {
+			printf("Decomposable as the sum on [%u, %u]\n", input / length, input / length + length - 1);
+		}
+	}
 }
 
 
 
 void decompose(unsigned long input) {
-    unsigned long upper_bound;
-    unsigned long sum;
-    #pragma omp parallel for
-    for (unsigned long lower_bound = 1; lower_bound < input/3; lower_bound++) {
-        sum = 0;
-        for (upper_bound = lower_bound; sum < input; upper_bound++) {
-            sum += upper_bound;
-        }
-        if (sum == input) {
-            printf("Decomposable as the sum on [%lu,%lu]\n", lower_bound, upper_bound-1);
-        }
+  unsigned long length_max = (unsigned long) sqrt(2 * input);
+  #pragma omp parallel for
+  for (unsigned long length = 1; length < length_max; input -= length, length++) {
+    if (input % length == 0) {
+      printf("Decomposable as the sum on [%lu, %lu]\n", input / length, input / length + length - 1);
     }
+  }
 }
 
 
 
 void decompose(unsigned long long input) {
-    unsigned long long upper_bound;
-    unsigned long long sum;
-    #pragma omp parallel for
-    for (unsigned long long lower_bound = 1; lower_bound < input/3; lower_bound++) {
-        sum = 0;
-        for (upper_bound = lower_bound; sum < input; upper_bound++) {
-            sum += upper_bound;
-        }
-        if (sum == input) {
-            printf("Decomposable as the sum on [%llu,%llu]\n", lower_bound, upper_bound-1);
-        }
+  unsigned long long length_max = (unsigned long long) sqrt(2 * input);
+  #pragma omp parallel for
+  for (unsigned long long length = 1; length < length_max; input -= length, length++) {
+    if (input % length == 0) {
+      printf("Decomposable as the sum on [%llu, %llu]\n", input / length, input / length + length - 1);
     }
+  }
 }
 
 
